@@ -244,6 +244,33 @@ body {
 }
 .link:hover .arrow { color: var(--accent); transform: translateX(4px); }
 
+/* COUNTER */
+.counter-wrap {
+  margin-top: 36px;
+  opacity: 0; animation: popIn .5s .5s ease both;
+}
+.counter-inner {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(245,234,208,0.05);
+  border: 1px solid rgba(245,234,208,0.12);
+  border-radius: 50px;
+  padding: 8px 20px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,.2);
+}
+.counter-eye { font-size: 14px; }
+.counter-label {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 11px; letter-spacing: .15em;
+  color: rgba(245,234,208,.45);
+}
+.counter-num {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px; letter-spacing: .08em;
+  color: var(--yellow);
+  text-shadow: 0 0 10px rgba(247,201,72,.5);
+  min-width: 50px; text-align: center;
+}
+
 /* FOOTER */
 .footer {
   margin-top: 44px; text-align: center;
@@ -282,10 +309,10 @@ body {
     <div class="name">夜遊び<span>レオン</span></div>
     <div class="tagline">OSAKA NIGHTLIFE</div>
     <div class="bio">
-      大阪アラフォー道楽人🌙<br>
-      松島・信太山・新地・雄琴・福原ソープ…<br>
-      Xや他では書けないリアルな体験談を全公開。<br>
-      読めば、明日からの夜遊びが変わる。
+      大阪在住アラフォーのナイトレジャー道楽人！<br>
+      活動場所は、信太山松島新地、雄琴福原ソープに行きます！<br>
+      Xやnoteで体験談やオキニさんたちとの日常を発信中！<br>
+      読めば、明日からの夜遊びが変わるかも🤣
     </div>
   </div>
 
@@ -300,7 +327,7 @@ body {
       </div>
       <div class="link-text">
         <div class="link-title">X（Twitter）</div>
-        <div class="link-sub">深夜のつぶやき・速報</div>
+        <div class="link-sub">風俗体験、レポをつぶやき中！</div>
       </div>
       <span class="arrow">›</span>
     </a>
@@ -314,7 +341,7 @@ body {
       </div>
       <div class="link-text">
         <div class="link-title">公式LINE</div>
-        <div class="link-sub">限定情報・先行案内はこちら</div>
+        <div class="link-sub">準備中</div>
       </div>
       <span class="arrow">›</span>
     </a>
@@ -332,13 +359,13 @@ body {
       </div>
       <div class="link-text">
         <div class="link-title">深夜マーケット</div>
-        <div class="link-sub">ナイトレジャー・体験談コンテンツ</div>
+        <div class="link-sub">体験レポートの詳細を投稿！</div>
       </div>
       <span class="arrow">›</span>
     </a>
 
     <!-- note -->
-    <a href="#" class="link lk-note">
+    <a href="https://note.com/yoasobileon" class="link lk-note" target="_blank" rel="noopener">
       <div class="icon-box" style="background:#fff;">
         <svg width="26" height="26" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <rect width="200" height="200" rx="0" fill="white"/>
@@ -347,7 +374,7 @@ body {
       </div>
       <div class="link-text">
         <div class="link-title">Note</div>
-        <div class="link-sub">信太山・雄琴・パパ活レポ 31記事</div>
+        <div class="link-sub">オキニさんたちとの日常を投稿！</div>
       </div>
       <span class="arrow">›</span>
     </a>
@@ -361,11 +388,20 @@ body {
       </div>
       <div class="link-text">
         <div class="link-title">Myfans</div>
-        <div class="link-sub">メンバー限定コンテンツ</div>
+        <div class="link-sub">準備中</div>
       </div>
       <span class="arrow">›</span>
     </a>
 
+  </div>
+
+  <!-- VISITOR COUNTER -->
+  <div class="counter-wrap">
+    <div class="counter-inner">
+      <span class="counter-eye">👁</span>
+      <span class="counter-label">訪問者数</span>
+      <span class="counter-num" id="visit-count">...</span>
+    </div>
   </div>
 
   <div class="footer">
@@ -374,4 +410,28 @@ body {
 
 </div>
 </body>
+<script>
+// Visitor counter using countapi.xyz
+(async () => {
+  try {
+    const res = await fetch('https://api.countapi.xyz/hit/leon-linl.vercel.app/visits');
+    const data = await res.json();
+    const el = document.getElementById('visit-count');
+    // Animate number counting up
+    const target = data.value;
+    const duration = 1200;
+    const start = Math.max(0, target - 80);
+    const startTime = performance.now();
+    const tick = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(start + (target - start) * ease).toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  } catch {
+    document.getElementById('visit-count').textContent = '---';
+  }
+})();
+</script>
 </html>
